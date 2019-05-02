@@ -46,6 +46,7 @@ A small simple library to easily get/set/delete items from JSON objects based on
     console.log(rspath.pathGet(obj, 'b.bb[2]'));
     console.log(rspath.pathGet(obj, 'b.bb[3]'));
     console.log(rspath.pathGet(obj, 'b.bb[4]'));
+    console.log(rspath.pathGet(obj, 'b/bb[4]', '/'));
 
     // Arrays and Objects
 

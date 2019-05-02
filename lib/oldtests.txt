@@ -1,0 +1,205 @@
+// var obj = {
+// 	a: 'a',
+// 	b: '',
+// 	d: {
+// 		da: 'a',
+// 		db: '',
+// 		dd: {
+// 			dda: 'a'
+// 		}
+// 	},
+// 	e: ['a','b'],
+// 	f: {
+// 		fa: [],
+// 		fb: ['a', 'b', 'c', 'd', 'e'],
+// 		fc: [{
+// 			a: 'a',
+// 			b: 'b'
+// 		}, {
+// 			c: 'c',
+// 			d: 'd',
+// 			e: ['a', 'b', 'c', 'd', 'e']
+// 		}]
+// 	}
+// };
+
+// validate(objectPathGet(obj, 'a'), obj.a);
+// validate(objectPathGet(obj, 'b'), obj.b);
+// validate(objectPathGet(obj, 'c'), undefined);
+// validate(objectPathGet(obj, 'd'), obj.d);
+// validate(objectPathGet(obj, 'd.da'), obj.d.da);
+// validate(objectPathGet(obj, 'd.db'), obj.d.db);
+// validate(objectPathGet(obj, 'd.dc'), obj.d.dc);
+// validate(objectPathGet(obj, 'd.dd'), obj.d.dd);
+// validate(objectPathGet(obj, 'd.dd.dda'), obj.d.dd.dda);
+// validate(objectPathGet(obj, 'd.dd.ddc'), undefined);
+// validate(objectPathGet(obj, 'f.fa'), []);
+// validate(objectPathGet(obj, 'f.fa[0]'), undefined);
+// validate(objectPathGet(obj, 'f.fb[0]'), obj.f.fb[0]);
+// validate(objectPathGet(obj, 'f.fb[1]'), obj.f.fb[1]);
+// validate(objectPathGet(obj, 'f.fb[100]'), undefined);
+// validate(objectPathGet(obj, 'f.fc[0].b'), obj.f.fc[0].b);
+// validate(objectPathGet(obj, 'f.fc[1].e[3]'), obj.f.fc[1].e[3]);
+
+// /* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
+
+// var dictArrayGet = {
+// 	'a': [
+// 		[1,2,3],
+// 		[4,5,6]
+// 	]
+// };
+
+// validate(objectPathGet(dictArrayGet, 'a[0][2]'), 3);
+// validate(objectPathGet(dictArrayGet, 'a[1][2]'), 6);
+// validate(objectPathGet(dictArrayGet, 'a[1][3]'), undefined);
+// validate(objectPathGet(dictArrayGet, 'a[2][2]'), undefined);
+
+// /* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
+
+// var dict = undefined;
+// objectPathSet(dict, 'hello', 'world')
+// validate(dict, undefined);
+
+// dict = {};
+// objectPathSet(dict, 'hello', 'world')
+// validate(dict.hello, 'world');
+
+// objectPathSet(dict, 'hello', 'world!')
+// validate(dict.hello, 'world!');
+
+// objectPathSet(dict, '0', 'a')
+// validate(dict['0'], 'a');
+
+// objectPathSet(dict, '1', 'a')
+// validate(dict['1'], 'a');
+
+// objectPathSet(dict, '1.2', 'b')
+// validate(dict['1']['2'], 'b');
+
+// objectPathSet(dict, '2.3.4', 'c')
+// validate(dict['2']['3']['4'], 'c');
+
+// objectPathSet(dict, '3', 'a')
+// validate(dict['3'], 'a');
+
+// objectPathSet(dict, '3.2.1', 'b')
+// validate(dict['3']['2']['1'], 'b');
+
+// objectPathSet(dict, '3.2', 'a')
+// validate(dict['3']['2'], 'a');
+
+// objectPathSet(dict, '3', 'b')
+// validate(dict['3'], 'b');
+
+// objectPathSet(dict, '5.6.7.8.9', {'a': 'b', 'c': {'d': ['e']}})
+// validate(dict['5']['6']['7']['8']['9'], {'a': 'b', 'c': {'d': ['e']}});
+
+// /* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
+
+// var dictArrayTest = {};
+// validate(objectPathSet(dictArrayTest, '1', []), true);
+// validate(dictArrayTest['1'], []);
+
+// validate(objectPathSet(dictArrayTest, '1[0]', 1), false);
+
+// validate(objectPathSet(dictArrayTest, '1', [1]), true);
+// validate(dictArrayTest['1'][0], 1);
+
+// validate(objectPathSet(dictArrayTest, '1', [0,1,2,3,4,5]), true);
+// validate(dictArrayTest['1'], [0,1,2,3,4,5]);
+
+// validate(objectPathSet(dictArrayTest, '1[0]', 1), true);
+// validate(dictArrayTest['1'][0], 1);
+
+// validate(objectPathSet(dictArrayTest, '1[1]', 'a'), true);
+// validate(dictArrayTest['1'][1], 'a');
+
+// validate(objectPathSet(dictArrayTest, '1[4]', 1), true);
+
+// validate(objectPathSet(dictArrayTest, '1[10]', 'a'), false);
+
+// validate(objectPathSet(dictArrayTest, '1[1]', {'a': 'b', 'c': [1,2,3,4,5]}), true);
+// validate(dictArrayTest['1'][1].c, [1,2,3,4,5]);
+
+// validate(objectPathSet(dictArrayTest, '1[1].c[3]', [0,1,2,3,4,5]), true);
+// validate(dictArrayTest['1'][1].c[3], [0,1,2,3,4,5]);
+
+// logJSON(dictArrayTest);
+// validate(objectPathSet(dictArrayTest, '1[1][1]', [0,1,2,3,4,5]), false);
+// logJSON(dictArrayTest);
+
+// validate(objectPathSet(dictArrayTest, 'a', [0,1,2,3,4,5]), true);
+// validate(objectPathSet(dictArrayTest, 'a[0]', [6,7,8,9]), true);
+// validate(objectPathSet(dictArrayTest, 'a[2]', [6,7,8,9]), true);
+// logJSON(dictArrayTest);
+// validate(objectPathSet(dictArrayTest, 'a[0][1]', ['a', 'b']), true);
+// validate(objectPathSet(dictArrayTest, 'a[2][1]', {'a': 'b'}), true);
+// logJSON(dictArrayTest);
+
+// /* -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- */
+
+// var dictDeleteTest = {
+// 	'a': 'b',
+// 	'c': [1,2,3],
+// 	'd': [{
+// 		'a': [1,2,3],
+// 		'b': [1,2,3],
+// 	},
+// 	[1,2,3]
+// 	]
+// };
+
+// // Should fail as input invalid
+// validate(objectPathDelete(undefined, undefined), false);
+// validate(objectPathDelete(dictDeleteTest, undefined), false);
+// validate(objectPathDelete(undefined, 'a'), false);
+
+// // Should fail as doesn't exist
+// validate(objectPathDelete(dictDeleteTest, 'e'), false);
+
+// // Should fail as doesn't exist
+// validate(objectPathDelete(dictDeleteTest, 'a.e'), false);
+
+// // Should fail as doesn't exist
+// validate(objectPathDelete(dictDeleteTest, 'c[7]'), false);
+
+// // Should fail as doesn't exist
+// validate(objectPathDelete(dictDeleteTest, 'c[0].a'), false);
+
+// // Should fail as doesn't exist
+// validate(objectPathDelete(dictDeleteTest, 'c[0].[1]'), false);
+
+// // Should delete
+// validate(dictDeleteTest.a, 'b');
+// validate(objectPathDelete(dictDeleteTest, 'a'), true);
+// validate(dictDeleteTest.a, undefined);
+
+// // Should delete
+// validate(dictDeleteTest.c[0], 1);
+// validate(dictDeleteTest.c.length, 3);
+// validate(objectPathDelete(dictDeleteTest, 'c[0]'), true);
+// validate(dictDeleteTest.c[0], 2);
+// validate(dictDeleteTest.c.length, 2);
+
+// // Should delete
+// validate(objectPathDelete(dictDeleteTest, 'c[0]'), true);
+// validate(dictDeleteTest.c[0], 3);
+// validate(dictDeleteTest.c.length, 1);
+
+// // Should delete
+// validate(objectPathDelete(dictDeleteTest, 'c[0]'), true);
+// validate(dictDeleteTest.c[0], undefined);
+// validate(dictDeleteTest.c.length, 0);
+
+// // Should delete
+// validate(dictDeleteTest.d[0].a[2], 3);
+// validate(objectPathDelete(dictDeleteTest, 'd[0].a[2]'), true);
+// validate(dictDeleteTest.d[0].a[2], undefined);
+
+// validate(dictDeleteTest.d[1][1], 2);
+// validate(dictDeleteTest.d[1].length, 3);
+// validate(objectPathDelete(dictDeleteTest, 'd[1][1]'), true);
+// validate(dictDeleteTest.d[1][1], 3);
+// validate(dictDeleteTest.d[1].length, 2);
+// logJSON(dictDeleteTest);
